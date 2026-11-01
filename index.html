@@ -2761,11 +2761,11 @@ function hubHUD(R){const r=rr(X),n=1+Object.values(HUBO).filter(o=>o&&Date.now()
 //  ATRIUM -> north: HOTEL ELEVATORS (12) | south: THE MINES | east: THE SHOP (shop, boards)
 //  HALLWAYS -> south: THE ARCHIVES (mini library, coming soon doors)
 // ===================================================================
-const LOBA=[['OUTDOORS',16,128,208,480],['THE ATRIUM',256,224,592,288],['HOTEL ELEVATORS',256,48,592,144],['THE MINES',256,544,592,176],['THE SHOP',880,224,400,224],['THE ARCHIVES',880,480,400,176],['HALL OF FAME',960,64,320,128]];
+const LOBA=[['OUTDOORS',16,128,208,480],['THE ATRIUM',256,224,592,288],['HOTEL ELEVATORS',256,48,592,144],['THE MINES',256,544,592,176],['THE SHOP',880,224,400,224],['THE ARCHIVES',880,480,400,176],['HALL OF FAME',960,64,320,128],['LOOT CRATES',1296,232,288,208],['REVIVES',1296,472,288,184]];
 const LOBS=[[0,0,256,128],[0,608,256,128],[0,128,16,480],[224,128,32,208],[224,400,32,208],[256,192,264,32],[584,192,264,32],[256,512,264,32],[584,512,264,32],
- [848,224,32,112],[848,400,32,112],[848,0,32,224],[848,512,32,224],[880,0,720,64],[880,64,80,160],[960,192,256,32],[1264,192,16,32],[1280,64,320,160],[1280,224,320,512],[880,448,346,32],[1274,448,6,32],[880,656,400,80]];
+ [848,224,32,112],[848,400,32,112],[848,0,32,224],[848,512,32,224],[880,0,720,64],[880,64,80,160],[960,192,256,32],[1264,192,16,32],[1280,64,320,160],[1280,224,320,8],[1280,232,16,160],[1584,232,16,208],[1280,440,320,32],[1280,472,16,88],[1280,608,16,128],[1584,472,16,184],[1296,656,304,80],[880,448,346,32],[1274,448,6,32],[880,656,400,80]];
 // doors: x,y,w,h, vertical?, style
-const LOBD=[[224,336,32,64,1,'front'],[520,192,64,32,0,'wood'],[520,512,64,32,0,'mine'],[848,336,32,64,1,'wood'],[1226,448,48,32,0,'arch'],[1216,192,48,32,0,'wood']];
+const LOBD=[[224,336,32,64,1,'front'],[520,192,64,32,0,'wood'],[520,512,64,32,0,'mine'],[848,336,32,64,1,'wood'],[1226,448,48,32,0,'arch'],[1216,192,48,32,0,'wood'],[1280,392,16,48,1,'wood'],[1280,560,16,48,1,'wood']];
 const lobArea=(x,y)=>{for(const a of LOBA)if(x>=a[1]&&x<a[1]+a[3]&&y>=a[2]&&y<a[2]+a[4])return a[0];return''};
 const lobH=(a,b2,k=0)=>{const v=Math.sin(a*12.9898+b2*78.233+k*37.719)*43758.5453;return v-Math.floor(v)};
 function losGridOf(rects){const g=new Set();for(const q of rects)for(let x=q[0];x<q[0]+q[2];x+=16)for(let y=q[1];y<q[1]+q[3];y+=16)g.add(Math.floor(x/16)+','+Math.floor(y/16));return g}
@@ -3529,7 +3529,8 @@ function banTick(dt,A){if(!G.banW)return;const R=G.R;G.pause=null;A.forEach(p=>{
  G.banJ-=dt;if(G.banJ<=0){G.banJ=150+Math.random()*240;G.banE=Math.max(G.banE,20);G.jsc=1.1;G.jsk=BANJS[Math.random()*BANJS.length|0];G.flk=1.2;banScream()}}
 {const _ng=newGame;newGame=function(n,keep,np){if(amBanned()&&!globalThis.BANGO&&!globalThis.HUBW&&!keep){setTimeout(enterBanWorld,0);return}return _ng(n,keep,np)}}
 // ---------- the bug museum ----------
-const BUGS=[['TWO TABS TELEPORTING','WITH THE GAME OPEN IN TWO TABS ON ONE ACCOUNT, YOU TELEPORTED BETWEEN THE TWO SPOTS FOR EVERYONE ELSE.','FIXED - ONLY THE NEWEST TAB PLAYS'],
+const BUGS=[['FAKE OLD SKINS','THE OLD SKELETON KEY, OLD CANDLE AND OLD ALARM CLOCK SKINS LOOKED EXACTLY LIKE THE NEW ONES.','FIXED - THEY USE THE REAL OLD PIXEL ART'],
+['TWO TABS TELEPORTING','WITH THE GAME OPEN IN TWO TABS ON ONE ACCOUNT, YOU TELEPORTED BETWEEN THE TWO SPOTS FOR EVERYONE ELSE.','FIXED - ONLY THE NEWEST TAB PLAYS'],
  ['BLOCKY LOBBY PLAYERS','OTHER PLAYERS IN THE LOBBY WERE PLAIN BLOCKS THAT JUMPED AROUND AND BLINKED.','FIXED - REAL CHARACTERS THAT MOVE SMOOTHLY'],
 ['DIFFERENT ROOMS ONLINE','IN A SERVER, PLAYERS WHO WERE NOT THE HOST SOMETIMES SAW A DIFFERENT ROOM - CLOSETS MISSING, FURNITURE MOVED, DOORS IN THE WRONG PLACE.','FIXED - THE HOST SENDS THE ROOM LAYOUT TO EVERYONE'],
  ['SERVERS CLOSING','SERVERS CLOSED BY THEMSELVES IF SOMEONE SWITCHED TABS OR THEIR PHONE SLEPT FOR A FEW SECONDS.','FIXED - HEARTBEAT KEEPS GOING IN THE BACKGROUND, LONGER TIMEOUT'],
@@ -4024,7 +4025,7 @@ ACH.push(['COOL',"YOU'RE ONE WITH THE COOL KIDS NOW",'JOIN THE GROUP IN THE LOBB
 // first skin you buy (like a UGC item) gives a free revive once
 setInterval(()=>{try{if(PF&&!PF.revUGC&&PF.skins&&Object.keys(PF.skins).some(k=>{const S=SKINS.find(s=>s[0]+'_'+s[1]==k);return S&&S[3]>0})){PF.revUGC=1;revGive(1,'THANKS FOR GETTING A SKIN!')}}catch(e){}},3000);
 // lobby: revive shop + the group sign
-{const o=lobBuild;lobBuild=function(R){o.apply(this,arguments);try{R.hst.push({k:'revshop',n:'REVIVES',c:'#8ccaff',x:1240,y:404,sty:'none'});R.hst.push({k:'group',n:'JOIN THE GROUP',c:'#ffd860',x:470,y:262,sty:'none'})}catch(e){}}}
+{const o=lobBuild;lobBuild=function(R){o.apply(this,arguments);try{R.hst.push({k:'revshop',n:'REVIVES',c:'#5aff7a',x:1440,y:572,sty:'none'});R.hst.push({k:'group',n:'JOIN THE GROUP',c:'#ffd860',x:470,y:262,sty:'none'})}catch(e){}}}
 function openRevShop(msg){openSo(`<h2>REVIVES</h2><p class=sub>A REVIVE BRINGS YOU BACK RIGHT WHERE YOU DIED. YOU HAVE <b style="color:#8ccaff">${PF.revives|0} REVIVES</b>, <b style="color:#5aff7a">${PF.green|0} GREEN COINS</b> AND <b style="color:#c08cff">${PF.blue|0} VOID</b>. ${esc(msg||'')}</p>
  <div class=row><button id=gcx style="border-color:#5aff7a;color:#8aff9a">TRADE 10 VOID FOR 1 GREEN COIN</button></div>
  <div class=row>${[[1,1],[5,3],[10,5]].map(([n,c])=>`<button data-rv="${n}" data-c="${c}">${n} REVIVE${n>1?'S':''} - ${c} GREEN COIN${c>1?'S':''}</button>`).join('')}</div><p class=sub>INSTANT REVIVE ON THE DEATH SCREEN: 1 GREEN COIN (PRESS V). FREE REVIVES: JOIN THE GROUP (ATRIUM), CODES, YOUR FIRST SKIN, SOME ACHIEVEMENTS, DAILY STREAKS (DAY 3, 7, 14, 30). FRIENDS CAN GIFT YOU ONE ONLINE.</p><button onclick="closeSo()">CLOSE</button>`);
@@ -4086,7 +4087,7 @@ const CHROMA={c_light:'',c_flash:'',c_bulk:'',c_pack:'',c_pick:'',c_jar:'',c_via
    if(b&&!PF.skins[S[0]+'_'+b]&&btn.dataset.b!=null){btn.disabled=true;btn.textContent='NEEDS '+((SKINS.find(s=>s[0]==S[0]&&s[1]==b)||[])[2]||'THE SKIN')}}})}catch(e){}}}
 </script><script>
 // ---------- ITEM CATALOG SHOP: every item in a scrolling list. Click one to zoom in: what it does + its skins and chromas ----------
-const CATL=['fl','fsh','bfl','btb','lp','cr','bd','vit','shoe','lk','ln','lc','ax','cb','shr','bkey','ck','rk','skk','cdl','alm','hrb','stv','stj','stb'];
+const CATL=['fl','fsh','bfl','btb','lp','cr','bd','vit','shoe','lk','ln','lc','ax','cb','shr','bkey','ck','rk','skk','cdl','alm','stv','stj','stb'];
 const CATD={fl:'Q / F: LIGHT IT UP. IT USES FUEL - PICK UP ANOTHER LIGHTER TO REFILL IT. YOU ALSO NEED IT TO LIGHT CANDLES.',fsh:'Q: A FOCUSED BEAM WHERE YOU LOOK. USES BATTERY.',bfl:'Q: A WIDE, LONG BEAM. EATS BATTERY ABOUT TWICE AS FAST.',btb:'Q: FULLY RECHARGES YOUR FLASHLIGHT OR BIG FLASHLIGHT.',lp:'OPENS A LOCKED DOOR OR CHEST WITHOUT THE KEY. YOU CAN CARRY 3.',cr:'SAVES YOU ONCE: IT CHAINS THE ENTITY AND DRAGS IT DOWN. ONE AT A TIME.',bd:'HOLD Q: HEAL 35 HP.',vit:'SPRINT FASTER AND LONGER FOR THE RUN.',shoe:'WALK 12% FASTER FOR THE RUN.',lk:'+25 MAX HEALTH FOR THE RUN.',ln:'DRAWERS WITH LOOT GLOW.',lc:'+50% COINS FOR THE RUN.',ax:'CHOPS BOARDED DOORS. 2 USES - PICK UP ANOTHER TO SWAP.',cb:'PRIES BOARDED DOORS, LOCKED CHESTS AND VENTS. 2 USES.',shr:'CUTS CHEST LOCKS, Q: CUTS A SNARE NEXT TO YOU. 3 USES.',bkey:'OPENS THE METAL VAULT GATES.',ck:'OPENS ONE LOCKED CHEST. RARE.',rk:'THE ROOM KEY. FOUND IN DRAWERS - OPENS THE LOCKED DOOR.',skk:'OPENS LOCKED DOORS, CHESTS, METAL GATES AND SKELETON DOORS. 2 USES. ONE AT A TIME.',cdl:'Q (NEEDS A LIGHTER): ITS FLAME TURNS BLUE WHEN AN ENTITY IS COMING. BURNS 4 MINUTES.',alm:'Q: SET IT DOWN. IT RINGS AND PULLS THE FIGURE - WHO STOMPS IT. ALWAYS IN THE LIBRARY.',hrb:'ONLY IN THE SKELETON ROOM VASE: FULL HEAL, THEN SLOW HEALING FOR 90 SECONDS.',stv:'HOLD Q: +25 HP, SMALL SPEED BOOST. 1 SIP. WORKS AT FULL HEALTH (EXTRA HEALTH).',stj:'HOLD Q: +65 HP, BIG SPEED BOOST. 4 SIPS. ONE AT A TIME.',stb:'HOLD Q: +45 HP, SPEED BOOST. 2 SIPS.'};
 function catIco(k,big){const im=ICO[k];if(!im)return'';const c=document.createElement('canvas'),z=Math.max(1,Math.floor((big?96:28)/Math.max(im.width,im.height)))||1,f=(big?96:28)/Math.max(im.width,im.height);c.width=Math.round(im.width*f);c.height=Math.round(im.height*f);const x=c.getContext('2d');x.imageSmoothingEnabled=false;x.drawImage(im,0,0,c.width,c.height);return c.toDataURL()}
 function catSkins(k){return SKINS.map((S,i)=>({S,i})).filter(o=>o.S[0]==k&&!(k=='cr'&&!SETS.cru&&typeof CRUX!='undefined'&&CRUX.includes(o.S[1])))}
@@ -4189,7 +4190,7 @@ function openCrates(msg){openSo(`<h2>📦 LOOT CRATES</h2><p class=sub>EACH CRAT
   strip.style.transition='none';strip.style.transform='translateX(0)';requestAnimationFrame(()=>{strip.style.transition='transform 3.2s cubic-bezier(.12,.75,.15,1)';strip.style.transform='translateX(-'+target+'px)'});
   let ticks=0;const tk=setInterval(()=>{ticks++;bp(900+ticks*12,.03,'square',.03);if(ticks>26)clearInterval(tk)},110);
   setTimeout(()=>{bp(523,.3,'square',.07,1046);setTimeout(()=>bp(784,.5,'square',.07,1568),160);document.getElementById('crOut').textContent='YOU GOT: '+win.n+'!';TOASTS.push({h:'LOOT CRATE',n:win.n,t:0});setTimeout(()=>openCrates('YOU GOT: '+win.n+'!'),1600)},3400)}}
-{const o=lobBuild;lobBuild=function(R){o.apply(this,arguments);try{R.hst.push({k:'crates',n:'LOOT CRATES',c:'#ffb030',x:1080,y:404,sty:'none'})}catch(e){}}}
+{const o=lobBuild;lobBuild=function(R){o.apply(this,arguments);try{R.hst.push({k:'crates',n:'LOOT CRATES',c:'#ffb030',x:1440,y:330,sty:'none'})}catch(e){}}}
 {const o=lobAct;lobAct=function(ob,p){if(ob.k=='crates'){openCrates();return 1}return o.apply(this,arguments)}}
 {const o=adminCmd;adminCmd=function(x){if(x=='crateme'){PF.crates=(PF.crates|0)+1;save();TOASTS.push({h:'ADMIN',n:'+1 LOOT CRATE',t:0});const m=document.getElementById('adSpM');if(m)m.textContent='+1 LOOT CRATE (YOU HAVE '+PF.crates+')';return}return o.apply(this,arguments)}}
 </script></body></html>
@@ -4529,4 +4530,49 @@ function pvlToggle(){SETS.pvl=SETS.pvl?0:1;try{setsSave()}catch(e){}if(HUBU){try
  const say=()=>{const u=uid();if(u)bc.postMessage({t:'hi',u,id:TABID,s:myStart})};
  bc.onmessage=e=>{const m=e.data||{};const u=uid();if(!u||m.u!==u||m.id===TABID)return;if(m.t=='hi'){if(m.s>myStart||m.s==myStart&&m.id>TABID)off();else if(!window.TABOFF)bc.postMessage({t:'hi',u,id:TABID,s:myStart})}};
  let said=0;setInterval(()=>{if(!said&&uid()){said=1;say()}},500)})();
+</script>
+<script>
+// ---------- LOBBY: the LOOT CRATES room (off the shop) and the REVIVES room (off the archives) ----------
+{const o=lobBuild;lobBuild=function(R){o.apply(this,arguments);try{R.xs.push([1422,290,36,22],[1300,250,40,20],[1540,250,40,20],[1422,532,36,22],[1300,600,28,40],[1552,600,28,40])}catch(e){}}}
+{const o=lobFloor;lobFloor=function(R,cx,cy){o.apply(this,arguments);try{const r=rr(X),t=performance.now()/1000,vis=(x,y,w,h)=>x-cx<W&&x+w-cx>0&&y-cy<H&&y+h-cy>0;
+ if(vis(1296,232,288,208)){// crate room: purple carpet, crate piles, a big glowing crate on a stand
+  r(1312-cx,262-cy,256,164,'#2a1438');r(1316-cx,266-cy,248,156,'#3a1c4c');for(let x=1320;x<1560;x+=12)r(x-cx,268-cy,2,152,'rgba(255,200,80,.05)');
+  const crate=(x,y,s,c1,c2)=>{r(x-cx,y-cy,s,s*.8|0,c1);r(x-cx,y-cy,s,2,c2);r(x-cx,y+(s*.8|0)-2-cy,s,2,c2);r(x-cx,y-cy,2,s*.8|0,c2);r(x+s-2-cx,y-cy,2,s*.8|0,c2);r(x+s/2-1-cx,y-cy,2,s*.8|0,c2)};
+  crate(1302,252,18,'#6a4020','#c8a040');crate(1320,252,18,'#5a3a7a','#ffd060');crate(1310,240,16,'#6a4020','#c8a040');crate(1542,252,18,'#5a3a7a','#ffd060');crate(1560,252,18,'#6a4020','#c8a040');crate(1550,240,16,'#2a5a6a','#8affff');
+  r(1418-cx,304-cy,44,10,'#2a1a10');r(1420-cx,302-cy,40,4,'#c8a040');const by=Math.round(Math.sin(t*2)*1.5);
+  const g=X.createRadialGradient(1440-cx,292-cy,2,1440-cx,292-cy,40);g.addColorStop(0,'rgba(255,200,80,'+(.35+.1*Math.sin(t*3))+')');g.addColorStop(1,'rgba(255,200,80,0)');X.fillStyle=g;X.fillRect(1400-cx,252-cy,80,80);
+  crate(1426,280+by,28,'#7a4a20','#ffd060');r(1436-cx,286+by-cy,8,6,'#ffd060');r(1438-cx,288+by-cy,4,2,'#7a4a20');
+  for(let k=0;k<6;k++){const a=t*1.4+k*1.05;r(Math.round(1440+Math.cos(a)*24-cx),Math.round(292+Math.sin(a)*10-cy),1,1,k%2?'#ffe060':'#c08cff')}
+  r(1392-cx,236-cy,96,10,'#1a0c22');tx('LOOT CRATES',1440-cx,244-cy,4,'#ffd060','center',0)}
+ if(vis(1296,472,288,184)){// revive room: green tiles, a glowing altar, green coins
+  for(let y=480;y<652;y+=16)for(let x=1296;x<1584;x+=16){if(!vis(x,y,16,16))continue;r(x-cx,y-cy,16,16,((x+y)>>4)%2?'#16301e':'#1a3a24');r(x-cx,y-cy,16,1,'#0e2014')}
+  const g=X.createRadialGradient(1440-cx,540-cy,2,1440-cx,540-cy,50);g.addColorStop(0,'rgba(90,255,122,'+(.3+.1*Math.sin(t*2.5))+')');g.addColorStop(1,'rgba(90,255,122,0)');X.fillStyle=g;X.fillRect(1390-cx,490-cy,100,100);
+  r(1420-cx,530-cy,40,24,'#4a5a4a');r(1420-cx,530-cy,40,3,'#8aa08a');r(1424-cx,534-cy,32,16,'#2a3a2a');const hy=Math.round(Math.sin(t*2)*2);
+  r(1436-cx,512+hy-cy,8,8,'#1a5a2a');r(1437-cx,513+hy-cy,6,6,'#3ad86a');r(1439-cx,514+hy-cy,2,4,'#c8ffd0');
+  for(const[x,y]of[[1306,604],[1312,620],[1556,606],[1564,624],[1318,640],[1550,640]]){r(x-cx,y-cy,6,6,'#1a5a2a');r(x+1-cx,y+1-cy,4,4,'#3ad86a')}
+  r(1300-cx,598-cy,28,40,'#2a1a10');r(1552-cx,598-cy,28,40,'#2a1a10');
+  for(let k=0;k<5;k++){const ph=(t*.6+k*.2)%1;X.globalAlpha=1-ph;r(Math.round(1430+k*5-cx),Math.round(528-ph*30-cy),1,2,'#8aff9a')}X.globalAlpha=1;
+  r(1400-cx,478-cy,80,10,'#0e2014');tx('REVIVES',1440-cx,486-cy,4,'#5aff7a','center',0)}}catch(e){}}}
+// ---------- loot crate odds ----------
+function crateOdds(){const skins=SKINS.filter(s=>s[3]<0&&!(PF.skins||{})[s[0]+'_'+s[1]]),pl=PLUSH.filter(q=>q[4]==null&&!(PF.plush||{})[q[0]]),L=[];
+ const pP=pl.length?(skins.length?25:100):0,pS=skins.length?(pl.length?75:100):0;
+ skins.forEach(S=>L.push({n:S[2],p:pS/skins.length,im:skinImg(S[0],S[4],S[5])}));pl.forEach(q=>L.push({n:q[1]+' PLUSHIE',p:pP/pl.length,im:(()=>{try{const c=plushImg(q[0]);return c.toDataURL()}catch(e){return''}})()}));
+ if(!skins.length&&pl.length)L.push({n:'+400 DOORKNOBS',p:75,im:''});if(!skins.length&&!pl.length)L.push({n:'+400 DOORKNOBS',p:100,im:''});
+ if(!skins.length&&pl.length){L.forEach(o=>{if(o.n.endsWith('PLUSHIE'))o.p=25/pl.length})}
+ return{L,pP:skins.length&&pl.length?25:!skins.length&&pl.length?25:pP,pS}}
+{const o=openCrates;openCrates=function(msg){o.apply(this,arguments);try{const O=crateOdds(),f=v=>v>=10?v.toFixed(0):v>=1?v.toFixed(1):v.toFixed(2);const d=document.createElement('div');d.innerHTML=`<h3 style="margin:8px 0 4px">WHAT'S INSIDE (CHANCES)</h3><p class=sub>SKINS ${f(O.pS)}% · PLUSHIES ${f(O.L.filter(x=>x.n.endsWith('PLUSHIE')).reduce((a,x)=>a+x.p,0))}% · YOU NEVER GET SOMETHING YOU ALREADY OWN.</p><div style="max-height:22vh;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px">${O.L.sort((a,b)=>b.p-a.p).map(x=>`<div style="display:flex;align-items:center;gap:6px;background:#000;border:1px solid #3a2a18;padding:3px">${x.im?`<img src="${x.im}" style="width:24px;height:24px;object-fit:contain;image-rendering:pixelated">`:'💰'}<span style="flex:1;font-size:10px">${esc(x.n)}</span><b style="color:#ffd060;font-size:11px">${f(x.p)}%</b></div>`).join('')}</div>`;const out=document.getElementById('crOut');if(out&&out.parentNode)out.parentNode.insertBefore(d,out.nextSibling.nextSibling)}catch(e){}}}
+// ---------- OLD skins for the skeleton key, candle and alarm clock are the real old pixel art ----------
+(()=>{const mkI=(w,h,f)=>{const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');f((a,b,ww,hh,col)=>{x.fillStyle=col;x.fillRect(a,b,ww,hh)});return c};
+ ORIGICO.skk=mkI(8,14,r=>{r(1,0,6,6,'#e8e0c8');r(2,1,4,4,'#3a3020');r(3,2,2,2,'#e8e0c8');r(3,6,2,7,'#e8e0c8');r(3,6,1,7,'#fff8e0');r(5,9,2,1,'#e8e0c8');r(5,11,2,2,'#e8e0c8');r(2,13,4,1,'#a89870')});
+ ORIGICO.cdl=mkI(6,10,r=>{r(1,4,4,6,'#f0e8d0');r(1,4,1,6,'#fff');r(2,2,2,2,'#ffb030');r(2,1,1,1,'#ffe060');r(0,9,6,1,'#8a6a20')});
+ ORIGICO.alm=mkI(10,10,r=>{r(1,2,8,7,'#c82a2a');r(2,3,6,5,'#f0f0e8');r(4,4,1,3,'#111');r(4,6,3,1,'#111');r(0,0,3,3,'#d8b030');r(7,0,3,3,'#d8b030');r(1,9,2,1,'#333');r(7,9,2,1,'#333')});
+ setTimeout(()=>{try{applySkins()}catch(e){}},700)})();
+// ---------- TOTEM job application: totem pop! ----------
+let TOTP=null;
+{const o=cruAnim;cruAnim=function(R,x,y,p,done,por,ent){const r=o.apply(this,arguments);try{if(PF.skin&&PF.skin.cr=='c_tiki'){const me=NET&&NET.game?myP():G.P[0];if(!p||p===me){const ps=[];for(let i=0;i<46;i++){const a=Math.random()*6.283,s=30+Math.random()*90;ps.push({x:p?p.px:x,y:(p?p.py:y)-12,vx:Math.cos(a)*s,vy:Math.sin(a)*s-60,c:Math.random()<.5?(Math.random()<.5?'#7aff4a':'#3ad83a'):(Math.random()<.5?'#ffe040':'#ffb020'),l:.9+Math.random()*.9})}
+ TOTP={t0:performance.now(),ps,im:ICO.cr};G.flash=Math.max(G.flash||0,.15);try{nz(.5,.12,2500,600);bp(300,.5,'triangle',.07,900);setTimeout(()=>bp(880,.4,'square',.04,1760),120)}catch(e){}}}}catch(e){}return r}}
+{const o=draw;draw=function(){o.apply(this,arguments);try{if(!TOTP||!G)return;const T=TOTP,t=(performance.now()-T.t0)/1000;if(t>1.9){TOTP=null;return}const cx=G.cx||0,cy=G.cy||0,dt=1/60;
+ T.ps.forEach(q=>{if(t>q.l)return;q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=120*dt;q.vx*=.98;X.globalAlpha=Math.max(0,1-t/q.l);X.fillStyle=q.c;X.fillRect(Math.round(q.x-cx),Math.round(q.y-cy),2,2)});X.globalAlpha=1;
+ const im=T.im;if(!im)return;let sc,a=1,sx;if(t<.3){const k=t/.3;sc=.3+k*1.1;sx=Math.cos(k*Math.PI*3)}else if(t<1.3){sc=1.4+Math.sin((t-.3)*3)*.05;sx=1}else{const k=(t-1.3)/.6;sc=1.4-k*1.2;a=1-k;sx=Math.cos(k*Math.PI*2)}
+ const hgt=100*sc,wid=hgt*im.width/im.height;X.save();X.globalAlpha=Math.max(0,a);X.imageSmoothingEnabled=false;X.translate(W/2,H/2-6-(t<.3?(1-t/.3)*20:0));X.scale(sx||.05,1);X.drawImage(im,-wid/2,-hgt/2,wid,hgt);X.restore()}catch(e){}}}
 </script>
