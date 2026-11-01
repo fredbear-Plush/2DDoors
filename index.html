@@ -357,7 +357,7 @@ function load(n,sub=0){if(!(NET&&NET.game&&!NET.host))G.lg=(G.lg|0)+1;if(sub){lo
  if(R.eyeE&&!G.bk){const T=R.fl.filter(f=>'to'.includes(f.t)&&Math.abs(f.x+f.w/2-R.eyeE.x)<140).sort((a,b)=>Math.abs(a.x-R.eyeE.x)-Math.abs(b.x-R.eyeE.x)).slice(0,2);T.forEach((f,i)=>{if(!R.pk.some(o=>o.tb&&Math.abs(o.x-f.x-f.w/2)<f.w/2+4))R.pk.push({x:f.x+f.w/2|0,y:f.y+5,k:['pick','band','bc','ckey','card'][(n*7+i*3)%5],tb:1})})}
  if(n==38&&!G.bk&&!G.muf){R.ev=null;R.eyeE=null;R.scr=null;R.sn=[];R.mim=null;R.halt=null;R.mf=null;R.dark=0;R.noLur=1;R.calm=1;R.th=R.th.replace(' (DARK)','')+' - QUIET'}
  {const has=[R.mim&&'mim',R.ev&&'ev',R.eyeE&&'ey'].filter(Boolean);if(has.length>1){const k=has[0];if(k!='ev')R.ev=null;if(k!='ey')R.eyeE=null;if(k!='scr')R.scr=null;if(k!='sn')R.sn=[];if(k!='mim')R.mim=null}if(has.length||R.mf)R.noLur=1}
- G.pad=null;kp.style.display='none';G.open=0;G.fade=1;G.P.forEach((p,i)=>Object.assign(p,{px:36+(i%3)*16,py:52+(i/3|0)*22+(i%3)*7,hid:0,vent:null,stun:0,sta:100,tired:0,anim:0,hp:p.dead||p.hp==null?(p.mh||100):Math.min(p.mh||100,p.hp+8),dead:0,ht:0,hit:0,sx:undefined,tp:(p.tp||0)+(NET&&NET.game&&!NET.host?0:1)}));if(G.R.lib)G.P.forEach((p,i)=>{p.px=G.R.w*8-14+(i%3)*14;p.py=(G.R.h-3)*16-(i/3|0)*14});G.cut=n==50?{k:'jeff',t:0,d:7.5}:n==51?{k:'fig',t:0,d:4.5}:null;G.flash=0;G.key=0;if(!NET||!NET.game)saveRun()}
+ G.pad=null;kp.style.display='none';G.open=0;G.fade=1;const stayD=G.P.length>1&&G.P.some(q=>!q.dead);G.P.forEach((p,i)=>Object.assign(p,{px:36+(i%3)*16,py:52+(i/3|0)*22+(i%3)*7,hid:0,vent:null,stun:0,sta:100,tired:0,anim:0,hp:p.dead&&stayD?0:p.dead||p.hp==null?(p.mh||100):Math.min(p.mh||100,p.hp+8),dead:p.dead&&stayD?1:0,ht:0,hit:0,sx:undefined,tp:(p.tp||0)+(NET&&NET.game&&!NET.host?0:1)}));if(G.R.lib)G.P.forEach((p,i)=>{p.px=G.R.w*8-14+(i%3)*14;p.py=(G.R.h-3)*16-(i/3|0)*14});G.cut=n==50?{k:'jeff',t:0,d:7.5}:n==51?{k:'fig',t:0,d:4.5}:null;G.flash=0;G.key=0;if(!NET||!NET.game)saveRun()}
 const mpK=()=>G&&G.P?Math.min(3,Math.max(0,G.P.length-1)):0;
 function hurt(p,d,m,h){if(p.dead||G&&G.god)return;d*=(p.plDef||1);d*=1+.3*mpK();if(p.arw&&d>0){d*=.5;p.ard=(p.ard??60)-d;if(p.ard<=0){p.arw=0;p.ard=60;if(G.R)G.R.fx.push({x:p.px,y:p.py-28,t:0,s:'ARMOR BROKE'});bp(200,.2,'square',.08,80)}}p.hp-=d;if(d>=5)p.hit=.4;if(p.hp<=0){p.hp=0;kill(p,m,h);if(!p.dead)p.hp=40}}
 // the guiding light looks at what actually happened before you died
@@ -437,8 +437,9 @@ if(R.suit&&!R.ds.suit&&Math.hypot(p.px-R.suit.x,p.py-R.suit.y)<18){if(gv(p,'ds')
  if(R.elec&&elecAct(p))return;if(atDoor(p,R)&&p.stun<=0){if(R.elec&&!R.ds.pw){R.fx.push({x:R.doorX,y:30,t:0,s:'THE ELEVATOR HAS NO POWER - FIX THE BREAKER BOX'});bp(150,.1);return}if(R.locked){if(!(NET&&NET.game)||p===myP())openPad();return}
   if(R.kl){const m=s=>R.fx.push({x:R.doorX,y:30,t:0,s});if(G.key||heldK(p)=='skk'&&p.skk>0){const sk=!G.key;if(sk)p.skk--;G.key=0;R.kl=0;m(sk?'THE SKELETON KEY OPENS IT':'UNLOCKED');bp(1000,.3,'square',.08,1600)}else if(hk(p,'lp')){p.lp--;R.kl=0;m('PICKED!');bp(1000,.3,'square',.08,1600)}else{m('NEED A KEY');bp(150,.1)}return}
   if(R.ch&&R.long){if(!G.cut){G.P.forEach(q=>{if(!q.dead)award(q,'SEEK')});bossCut('slam')}return}
+  if(NET&&NET.game){const A=G.P.filter(q=>!q.dead),at=A.filter(q=>q===p||atDoor(q,R)||Math.hypot(q.px-p.px,q.py-p.py)<48);if(at.length<A.length){R.fx.push({x:R.doorX,y:30,t:0,s:'WAITING FOR EVERYONE AT THE DOOR ('+at.length+'/'+A.length+')'});bp(300,.1,'square',.04);return}}
   G.open=.01;bp(120,.4,'sawtooth',.06,60)}}
-function useBd(p){if(!p||p.dead||!(p.bd>0)||p.hp>=p.mh)return;p.bd--;p.hp=Math.min(p.mh,p.hp+35);G.R.fx.push({x:p.px,y:p.py-20,t:0,s:'+35 HP'});bp(900,.2,'triangle',.08,1300)}
+function useBd(p){if(!p||p.dead||!(p.bd>0)||p.hp>=p.mh)return;p.bd--;p.hp=Math.min(p.mh,p.hp+15);G.R.fx.push({x:p.px,y:p.py-20,t:0,s:'+15 HP ('+(p.bd|0)+' BANDAGES LEFT)'});bp(900,.2,'triangle',.08,1300)}
 // ---------- hotbar: pick an item with 1-9 / mouse wheel, Q uses it ----------
 const hk=(p,k)=>p&&p[k]>0&&(NET&&NET.game&&p!==myP()?true:heldK(p)===k);
 const HBK=['skp','hm','ds','swd','dg','bw','spe','mc','shk','ar','qf','qr','qw','qb','qm','cm','mf','mr','mw','mb','mm','mt','fd','aw','bd','fl','fsh','lp','cr','ax','cb','bkey','ck','vit','shoe','lk','ln','lc'],HS=[0,0],HST=[0,0];
@@ -551,7 +552,7 @@ const save=()=>{try{localStorage.setItem('dprof',JSON.stringify(PF))}catch(e){}}
 const IK=['fl','vit','shoe','lk','ln','lc','bd','lp','cr','ax','bkey','fsh','ck','cb'];PF.inv.forEach(v=>IK.forEach(k=>v[k]=+v[k]||0));PF.stats=Object.assign({best:0,doors:0,deaths:0,games:0,wins:0},PF.stats||{});PF.stats.best=Math.max(PF.stats.best,PF.best|0);
 const MSH=[{k:'fl',n:'LIGHTER',pr:35,q:1,d:'F TO LIGHT IT - IT RUNS OUT OF FUEL'},{k:'vit',n:'VITAMINS',pr:75,d:'SPRINT FASTER AND LONGER - FOR ONE RUN'},{k:'shoe',n:'RUNNING SHOES',pr:150,d:'WALK 12% FASTER - FOR ONE RUN'},
  {k:'lk',n:'HEART LOCKET',pr:220,d:'+25 MAX HEALTH - FOR ONE RUN'},{k:'ln',n:'OLD LANTERN',pr:120,d:'GLOWING DRAWERS - FOR ONE RUN'},{k:'lc',n:'LUCKY COIN',pr:180,d:'+50% COINS - FOR ONE RUN'},
- {k:'bd',n:'BANDAGES x2',pr:40,q:2,d:'PRESS Q TO HEAL 35 HP - FOR ONE RUN'},{k:'lp',n:'LOCKPICKS x2',pr:60,q:2,d:'OPEN A KEY DOOR WITHOUT THE KEY'},{k:'ax',n:'AXE',pr:140,q:2,d:'CHOPS 2 BOARDED DOORS - FOR ONE RUN'},
+ {k:'bd',n:'BANDAGE PACK',pr:40,q:1,d:'Q: HEAL 15 HP PER BANDAGE. COMES WITH 3 - PICK UP MORE BANDAGES TO REFILL IT'},{k:'lp',n:'LOCKPICKS x2',pr:60,q:2,d:'OPEN A KEY DOOR WITHOUT THE KEY'},{k:'ax',n:'AXE',pr:140,q:2,d:'CHOPS 2 BOARDED DOORS - FOR ONE RUN'},
  {k:'bkey',n:'VOID KEY',pr:3,q:1,cur:'b',d:'OPENS ONE METAL GATE'},{k:'cb',n:'CROWBAR x2',pr:90,q:2,d:'PRY OPEN BOARDED DOORS AND LOCKED CHESTS'},{k:'cr',n:'CRUCIFIX',pr:300,q:1,d:'HOLD IT WHEN SOMETHING GETS YOU - SAVES YOU ONCE. NEXT RUN'}];
 const M={sel:0,sub:0,buyer:0,msg:'',mt:0},ui=document.getElementById('ui');let pst;
 function bank(){if(NET&&NET.game){netBank(st=='win');return}if(!G||G.banked)return;G.banked=1;let t=0;G.P.forEach((p,i)=>{p.coins=Math.round(p.coins*(p.plGold||1));p.plGold=1;t+=p.coins;PF.blue+=p.bc|0});G.gain=t;try{const sec=G.t0?(performance.now()-G.t0)/1000:0;if(!G.wasBk&&!G.bk){lbSubmit('coins',t);if(G.R&&!G.muf)lbSubmit('door',G.R.n+(st=='win'?1:0))}if(st=='win'&&!G.cheat&&sec>0){if(G.wasBk)lbSubmit('tbk',sec);else if(!G.muf)lbSubmit('t100',sec)}if(st=='win')lbSubmit('wins',PF.stats.wins|0)}catch(e){}clearRun();if(PF.coins>=1000)unlock('RICH');PF.best=Math.max(PF.best,G.R?G.R.n:0);PF.stats.best=Math.max(PF.stats.best,PF.best);save()}
@@ -643,7 +644,7 @@ function draw(){X.setTransform(SC,0,0,SC,0,0);X.imageSmoothingEnabled=false;X.fi
  if(st=='title'){menuDraw();drawToasts();return}
  if(G.cut){cutDraw();return}
  if(!G.P.length||!G.R){tx('JOINING...',W/2,90,8);return}
- const R=G.R,Q=G.P.filter(p=>!p.dead),Z=Q.length?Q:G.P,MP=NET&&NET.game?myP():null,FC=MP&&!MP.dead?[MP]:Z,ax=FC.reduce((s,p)=>s+(p.rx??p.px),0)/FC.length,ay=FC.reduce((s,p)=>s+(p.ry??p.py),0)/FC.length-(G.dkcs&&R.ds.dkb?40:0),cx=Math.round(Math.max(0,Math.min(R.w*16-W,ax-W/2)))+(R.ev&&R.ev.k=='haste'&&R.ev.ph==1||G.shake>0?Math.random()*5-2.5|0:0),cy=Math.round(Math.max(0,Math.min((R.h||RH)*16-H,ay-H/2)));G.cx=cx;G.cy=cy;
+ const R=G.R,Q=G.P.filter(p=>!p.dead),Z=Q.length?Q:G.P,MP=NET&&NET.game?myP():null,FC=MP&&!MP.dead?[MP]:(typeof specFC=="function"&&specFC()||Z),ax=FC.reduce((s,p)=>s+(p.rx??p.px),0)/FC.length,ay=FC.reduce((s,p)=>s+(p.ry??p.py),0)/FC.length-(G.dkcs&&R.ds.dkb?40:0),cx=Math.round(Math.max(0,Math.min(R.w*16-W,ax-W/2)))+(R.ev&&R.ev.k=='haste'&&R.ev.ph==1||G.shake>0?Math.random()*5-2.5|0:0),cy=Math.round(Math.max(0,Math.min((R.h||RH)*16-H,ay-H/2)));G.cx=cx;G.cy=cy;
  const c0=Math.floor(cx/16),c1=Math.min(R.w-1,c0+21);
  const rA=Math.max(2,Math.floor(cy/16)),rB=Math.min((R.h||RH)-1,Math.floor((cy+H)/16)+2);for(let c=c0;c<=c1;c++){const x=c*16-cx;if(cy<40){I(R.bkr?R.bp.wl:sWl,x,-cy);I(R.bkr?R.bp.wn:sWn,x,16-cy)}for(let r=rA;r<rB;r++)I(c==0||c==R.w-1?sBd:sFl[R.f==0?((c*7+r*13)%5<2?1:0):R.f==3?3+((c+r)%2):R.f],x,r*16-cy);I(sBd,x,((R.h||RH)-1)*16-cy)}
  R.rg.forEach(g=>{for(let i=0;i<g.w;i++)for(let j=0;j<3;j++)I(sCp,(g.c+i)*16-cx,(5+j)*16-cy);const r=rr(X),x=g.c*16-cx,y=5*16-cy,w=g.w*16;r(x+2,y+2,w-4,1,'#d8b030');r(x+2,y+45,w-4,1,'#d8b030');r(x+2,y+2,1,44,'#d8b030');r(x+w-3,y+2,1,44,'#d8b030')});
@@ -709,7 +710,7 @@ function draw(){X.setTransform(SC,0,0,SC,0,0);X.imageSmoothingEnabled=false;X.fi
  if(G.P.some(p=>p.hit>0)){X.fillStyle='rgba(200,0,0,.2)';X.fillRect(0,0,W,H)}if(G.flash>0){X.fillStyle='rgba(150,0,0,'+Math.min(.8,G.flash*2.2)+')';X.fillRect(0,0,W,H)}
  ventUI();
  const a=Math.max(G.open>.3?(G.open-.3)/.4:0,G.fade>0?G.fade:0);if(a>0){X.fillStyle='rgba(0,0,0,'+Math.min(1,a)+')';X.fillRect(0,0,W,H)}
- if(NET&&NET.game){if(MP&&MP.dead&&st=='play'){X.fillStyle='rgba(0,0,0,.45)';X.fillRect(0,56,W,34);tx('YOU WERE DOWNED - YOU COME BACK AT THE NEXT DOOR',W/2,68,5,'#ff6a6a');if(MP.dm)tx(String(MP.dm[0]).toUpperCase(),W/2,82,5,'#8ccaff')}}
+ if(NET&&NET.game){if(MP&&MP.dead&&st=='play'){X.fillStyle='rgba(0,0,0,.45)';X.fillRect(0,56,W,34);tx('YOU DIED - YOU ARE OUT UNTIL SOMEONE REVIVES YOU',W/2,68,5,'#ff6a6a');if(MP.dm)tx(String(MP.dm[0]).toUpperCase(),W/2,82,5,'#8ccaff')}}
  if(st=='dead')lightDraw(now);
  if(st=='win'){X.fillStyle='#000';X.fillRect(0,0,W,H);if(G.hal&&!G.halW){G.halW=1;unlock('FAR')}tx(G.muf?'YOU SURVIVED':G.lbd?'DOOR 1000':G.hal?'DOOR 50':'DOOR 100',W/2,70,16,'#d8b030');tx(G.muf?'YOU ESCAPED THE MUFFIN MAN':G.lbd?'YOU BEAT LOW BUDGET DOORS':G.hal?'TRICK OR TREAT COMPLETE! '+(G.candy|0)+' CANDY':'YOU ESCAPED THE HOTEL',W/2,98,8);G.P.forEach((p,i)=>ptr(i,W/2-G.np*14+i*28,104,2));tx('+'+(G.knobs|0)+' DOORKNOBS EARNED',W/2,150,6,'#ffd860');tx(NET&&NET.game&&!NET.host?'WAITING FOR THE HOST...':'PRESS E',W/2,166,7,'#fff')}
  jumpDraw();if(G.pause){pauseDraw();watcherDraw()}drawToasts()}
@@ -2095,7 +2096,7 @@ function pubMe(){if(!NET)return Promise.resolve();const e=clean({nm:NET.name,lk:
 function netPub(){if(!NET)return;clearTimeout(NET.pt);NET.pt=setTimeout(pubMe,200)}
 const netLook=()=>netPub();
 function onPlayers(v){if(!NET)return;const now=tnow();NET.players={};
- for(const u in v){const e=v[u];if(!e||typeof e!='object')continue;if(u!=NET.me&&now-(e.ts||0)>30000)continue;e.nm=String(e.nm||'PLAYER').toUpperCase().slice(0,16);e.st=e.st&&typeof e.st=='object'?e.st:{};NET.players[u]=e;lookSet(u,e.lk)}
+ for(const u in v){const e=v[u];if(!e||typeof e!='object')continue;if(u!=NET.me&&now-(e.ts||0)>90000)continue;e.nm=String(e.nm||'PLAYER').toUpperCase().slice(0,16);e.st=e.st&&typeof e.st=='object'?e.st:{};NET.players[u]=e;lookSet(u,e.lk)}
  if(NET.host){DB.update('lobby/'+NET.sid,{c:Object.keys(NET.players).length||1});if(NET.game)hostSyncP()}
  if(!NET.game)renderLobby();vcSync()}
 function netPlayersSorted(){const P=Object.assign({},NET.players);if(!P[NET.me])P[NET.me]={nm:NET.name,inv:PF.inv[0],j:NET.joinT,st:PF.stats};const h=NET.info&&NET.info.h;
@@ -2224,8 +2225,8 @@ function netEsc(){const n=performance.now();if(n-NET.esc<2500){NET.esc=0;if(NET.
 
 function netTick(dt){vcLevels();if(!NET)return;NET.hb-=dt;NET.ui-=dt;
  if(NET.hb<=0){NET.hb=4;DB.update(`rooms/${NET.sid}/players/${NET.me}`,{ts:tnow()}).catch(()=>{});
-  if(NET.host){DB.update('lobby/'+NET.sid,{ts:tnow(),c:Object.keys(NET.players).length||1,s:NET.game?'game':'lobby'}).catch(()=>{});for(const u in NET.players)if(u!=NET.me&&tnow()-(NET.players[u].ts||0)>25000){DB.remove(`rooms/${NET.sid}/players/${u}`);DB.remove(`rooms/${NET.sid}/in/${u}`)}}
-  else if(NET.info&&tnow()-(NET.info.ts||0)>30000){leaveNet('THE HOST DISCONNECTED');return}
+  if(NET.host){DB.update('lobby/'+NET.sid,{ts:tnow(),c:Object.keys(NET.players).length||1,s:NET.game?'game':'lobby'}).catch(()=>{});for(const u in NET.players)if(u!=NET.me&&tnow()-(NET.players[u].ts||0)>90000){DB.remove(`rooms/${NET.sid}/players/${u}`);DB.remove(`rooms/${NET.sid}/in/${u}`)}}
+  else if(NET.info&&tnow()-(NET.info.ts||0)>90000){leaveNet('THE HOST DISCONNECTED');return}
   vcSync()}
  if(NET.ui<=0){NET.ui=.2;document.querySelectorAll('.pc[data-u]').forEach(el=>el.classList.toggle('talk',talking(el.dataset.u)));const v=document.getElementById('vs');if(v)v.textContent=vcStatus();MIC.textContent=(VC.muted?'MIC OFF':'MIC ON')+' (M)'}
  if(!NET.game||!G)return;
@@ -3519,7 +3520,13 @@ function banTick(dt,A){if(!G.banW)return;const R=G.R;G.pause=null;A.forEach(p=>{
  G.banJ-=dt;if(G.banJ<=0){G.banJ=150+Math.random()*240;G.banE=Math.max(G.banE,20);G.jsc=1.1;G.jsk=BANJS[Math.random()*BANJS.length|0];G.flk=1.2;banScream()}}
 {const _ng=newGame;newGame=function(n,keep,np){if(amBanned()&&!globalThis.BANGO&&!globalThis.HUBW&&!keep){setTimeout(enterBanWorld,0);return}return _ng(n,keep,np)}}
 // ---------- the bug museum ----------
-const BUGS=[['ELEVATOR DOORS','IN THE LOBBY, IF YOU STOOD IN AN ELEVATOR THE DOORS KEPT MOVING AFTER YOU LEFT. THE DOOR TIMER WAS NEVER CAPPED.','FIXED'],
+const BUGS=[['DIFFERENT ROOMS ONLINE','IN A SERVER, PLAYERS WHO WERE NOT THE HOST SOMETIMES SAW A DIFFERENT ROOM - CLOSETS MISSING, FURNITURE MOVED, DOORS IN THE WRONG PLACE.','FIXED - THE HOST SENDS THE ROOM LAYOUT TO EVERYONE'],
+ ['SERVERS CLOSING','SERVERS CLOSED BY THEMSELVES IF SOMEONE SWITCHED TABS OR THEIR PHONE SLEPT FOR A FEW SECONDS.','FIXED - HEARTBEAT KEEPS GOING IN THE BACKGROUND, LONGER TIMEOUT'],
+ ['INVISIBLE LOBBY PLAYERS','OTHER PLAYERS IN THE LOBBY DID NOT SHOW UP IF YOUR COMPUTER CLOCK WAS DIFFERENT FROM THEIRS.','FIXED'],
+ ['JOB APPLICATION VS EYES','THE JOB APPLICATION DID NOTHING AGAINST EYES.','FIXED - HOLD IT AND IT GETS USED WHEN AN ENTITY HURTS YOU'],
+ ['DELETED ITEMS','PICKING UP A SECOND ONE-AT-A-TIME ITEM (LIKE A JOB APPLICATION) DELETED IT.','FIXED - IT STAYS ON THE FLOOR'],
+ ['BACK ON CLICK','CLICKING A PICTURE IN THE JOURNAL OR SHOP THREW YOU BACK TO THE MENU.','FIXED'],
+['ELEVATOR DOORS','IN THE LOBBY, IF YOU STOOD IN AN ELEVATOR THE DOORS KEPT MOVING AFTER YOU LEFT. THE DOOR TIMER WAS NEVER CAPPED.','FIXED'],
  ['CHAIR CLIP','SITTING IN A CHAIR NEXT TO A WALL AND STANDING UP COULD PUT YOU INSIDE THE WALL.','FIXED - YOU STAND UP IN A SAFE SPOT'],
  ['ROOM RESET','GOING TO THE NEXT ROOM AND COMING BACK REFILLED ALL THE DRAWERS AND ITEMS.','FIXED - ROOMS REMEMBER NOW'],
  ['SPRINT SPEAR','HOLDING SPRINT SHOWED A SPEAR IN YOUR HAND. THE SPEAR AND SPRINTING USED THE SAME NAME IN THE CODE.','FIXED'],
@@ -4426,4 +4433,66 @@ TDUR.btb=4;
 {const o=gv;gv=function(p,k){if(k=='btb'&&(p.btb|0)>=1){p.btb=TDUR.btb;if(G&&G.R)G.R.fx.push({x:p.px,y:p.py-30,t:0,s:'SWAPPED FOR A FULL BATTERY BOX'});return 1}const r=o.apply(this,arguments);if(k=='btb'&&r&&p.btb==1)p.btb=TDUR.btb;return r}}
 setInterval(()=>{try{if(st=='play'&&G&&G.R&&!G._b4&&!G.hub){G._b4=1;if((G.room|0)<=1)G.P.forEach(p=>{if(p.btb>0&&p.btb<4)p.btb=4})}}catch(e){}},300);
 {const o=drawDoors;drawDoors=function(R,cx,cy){o.apply(this,arguments);try{if(R.btp&&R.btp.length){const r=rr(X);R.btp.forEach(b=>{b.t+=1/60;const k=Math.min(1,b.t/.6),px=b.x+(b.p.px-b.x)*k,py=b.y-Math.sin(k*3.14)*18+(b.p.py-10-b.y)*k;X.globalAlpha=1-Math.max(0,(b.t-.6)/.3);const ix=Math.round(px-cx),iy=Math.round(py-cy);try{I(sBat,ix-5,iy-6)}catch(e){r(ix-2,iy-4,4,7,'#ffd040');r(ix-1,iy-5,2,1,'#ddd')}X.globalAlpha=1});R.btp=R.btp.filter(b=>b.t<.9)}}catch(e){}}}
+</script>
+<script>
+// ---------- ONLINE: clients add the same extra closets the host does ----------
+{const o=cUpd;cUpd=function(dt){try{const R=G&&G.R;if(R&&!R.clFix&&R.ev)clFix(R)}catch(e){}return o.apply(this,arguments)}}
+// keep the connection alive while the tab is in the background (servers were closing)
+setInterval(()=>{try{if(!NET||!DB||!NET.sid)return;DB.update(`rooms/${NET.sid}/players/${NET.me}`,{ts:tnow()}).catch(()=>{});if(NET.host)DB.update('lobby/'+NET.sid,{ts:tnow()}).catch(()=>{})}catch(e){}},5000);
+// ---------- LOBBY: see other players even if your clock is different ----------
+hubNet=function(){const D=soDB(),me=soMe();if(!D||!me||HUBU)return;const seen={};HUBU=D.on('hub/p',v=>{const now=Date.now(),O={};for(const u in v||{}){if(u===me.uid||!v[u])continue;const st=v[u].t;if(!seen[u]||seen[u].st!==st)seen[u]={st,rt:now};O[u]=Object.assign({},v[u],{t:seen[u].rt})}HUBO=O});try{D.onDisc('hub/p/'+me.uid)}catch(e){}};
+// ---------- BANDAGE PACK: 3 bandages inside, each heals 15. Bandages you find go in the pack ----------
+ITN.bd='BANDAGE PACK';NMI.bd='BANDAGE PACK';
+{const o=gv;gv=function(p,k){const had=p&&p.bd|0,r=o.apply(this,arguments);try{if(k=='bd'&&r&&!had&&p.bd>0){p.bd=Math.max(p.bd,3);if(G&&G.R)G.R.fx.push({x:p.px,y:p.py-38,t:0,s:'BANDAGE PACK (3 BANDAGES)'})}else if(k=='bd'&&r&&had&&G&&G.R)G.R.fx.push({x:p.px,y:p.py-38,t:0,s:'+1 BANDAGE IN THE PACK ('+(p.bd|0)+')'})}catch(e){}return r}}
+setInterval(()=>{try{if(st=='play'&&G&&G.R&&!G._bd&&!G.hub){G._bd=1;if((G.room|0)<=1)G.P.forEach(p=>{if(p.bd>0)p.bd+=2})}}catch(e){}},300);
+// ---------- one-at-a-time items: if you can't carry another, it stays on the floor ----------
+{const o=gv;gv=function(p,k){if(typeof ONE1!='undefined'&&ONE1[k]&&(p[k]|0)>=1&&G&&G.R){const D=G.R.ds;D.drop=D.drop||[];const n=D.drop.filter(q=>Math.hypot(q.x-p.px,q.y-p.py)<20).length;D.drop.push({x:Math.round(p.px+((n%3)-1)*12),y:Math.round(p.py+8+(n/3|0)*10),it:k,n:(TDUR&&TDUR[k])||1});G.R.fx.push({x:p.px,y:p.py-30,t:0,s:'YOU CAN ONLY CARRY ONE - LEFT IT ON THE FLOOR'});bp(150,.1);return 0}return o.apply(this,arguments)}}
+// ---------- JOB APPLICATION: if you're holding it and an entity hurts you (even EYES), it gets used ----------
+{const o=hurt;hurt=function(p,d,m,h){try{if(p&&!p.dead&&!(G&&G.god)&&d>0&&p.cr>0&&heldK(p)=='cr'&&!(p._crT>performance.now())){const k=jsKey(m);if(k&&!['bact','starve'].includes(k)){const R=G.R;p._crT=performance.now()+1500;if(k=='eyes'&&R.eyeE){const E=R.eyeE;R.cra=R.cra||[];R.eyeE=null}if(k=='snare')(R.sn||[]).forEach(q=>{if(Math.hypot(q.x-p.px,q.y-p.py)<30){q.u=1;q.cut=1}});const hp=p.hp;kill(p,m,h);if(!p.dead)p.hp=Math.max(hp,p.hp);return}}}catch(e){}return o.apply(this,arguments)}}
+// ---------- SPECTATE: when you're dead online, watch the others (← → to switch) ----------
+function specList(){try{const me=NET&&NET.game?myP():null;return G.P.filter(p=>!p.dead&&p!==me)}catch(e){return[]}}
+function specFC(){if(!G||!NET||!NET.game)return null;const me=myP();if(!me||!me.dead)return null;const L=specList();if(!L.length)return null;let p=L.find(q=>q.u===G.spec);if(!p){p=L[0];G.spec=p.u}return[p]}
+addEventListener('keydown',e=>{try{if(st!='play'||!G||!NET||!NET.game||e.target&&/^(INPUT|TEXTAREA)$/.test(e.target.tagName))return;const me=myP();if(!me||!me.dead)return;const L=specList();if(L.length<2)return;let d=0;if(e.key=='ArrowRight'||e.key=='d'||e.key=='D')d=1;else if(e.key=='ArrowLeft'||e.key=='a'||e.key=='A')d=-1;if(!d)return;let i=L.findIndex(q=>q.u===G.spec);i=(i+d+L.length)%L.length;G.spec=L[i].u;bp(600,.05,'square',.04)}catch(err){}});
+{const o=draw;draw=function(){o.apply(this,arguments);try{if(st=='play'&&G&&NET&&NET.game&&!G.cut){const me=myP();if(me&&me.dead){const L=specList(),p=L.find(q=>q.u===G.spec);X.fillStyle='rgba(0,0,0,.6)';X.fillRect(W/2-90,18,180,22);tx(p?'SPECTATING: '+String(p.nm||'PLAYER'):'EVERYONE IS DOWN',W/2,28,5,'#8ccaff');if(L.length>1)tx('← →  SWITCH PLAYER',W/2,37,3,'#aa9a7a')}}}catch(e){}}}
+// ---------- PROFILES: add friend / chat / spectate right from someone's profile ----------
+function profBtns(u){const me=SO.me;if(!u||!me||u===me.uid||u===(NET&&NET.me&&me.uid!==NET.me?'':''))return'';let h='';if(u!==me.uid){h+=SO.fr[u]?'<button disabled>FRIENDS ✓</button>':SO.rq[u]?'<button data-pf=acc>ACCEPT FRIEND</button>':'<button data-pf=add>ADD FRIEND</button>';h+='<button data-pf=dm>PRIVATE CHAT</button>'}
+ try{const mp=NET&&NET.game&&myP();const tp=NET&&NET.game&&G&&G.P.find(q=>q.u===u);if(tp&&!tp.dead&&(mp&&mp.dead||isAdm()))h+='<button data-pf=spec>SPECTATE</button>'}catch(e){}return h}
+function profWire(root,u,nm){root.querySelectorAll('[data-pf]').forEach(b=>b.onclick=async()=>{const D=soDB(),me=SO.me,k=b.dataset.pf;if(!D||!me)return;
+ if(k=='add'){try{await D.set('users/'+u+'/freq/'+me.uid,me.name);b.textContent='REQUEST SENT!';b.disabled=true}catch(e){b.textContent='COULD NOT SEND'}}
+ else if(k=='acc'){acceptF(u,SO.rq[u]||nm)}
+ else if(k=='dm'){closeStats();openDM(u,nm)}
+ else if(k=='spec'){G.spec=u;if(isAdm()&&myP()&&!myP().dead)G.aspec=u;closeStats()}})}
+{const o=showStats;showStats=function(u,p,k){o.apply(this,arguments);try{const uid=u||(p&&p.u);if(!uid||!SO.me||uid===SO.me.uid)return;const nm=(NET&&NET.players&&NET.players[uid]&&NET.players[uid].nm)||(p&&p.nm)||'PLAYER',h=profBtns(uid);if(!h)return;const row=document.createElement('div');row.className='row';row.style.marginTop='8px';row.innerHTML=h;const c=document.getElementById('scl');c.parentNode.parentNode.insertBefore(row,c.parentNode);profWire(row,uid,nm)}catch(e){}}}
+// admins can spectate a living player too
+{const o=specFC;specFC=function(){const r=o();if(r)return r;try{if(G&&G.aspec&&NET&&NET.game){const p=G.P.find(q=>q.u===G.aspec&&!q.dead);if(p)return[p];G.aspec=null}}catch(e){}return null}}
+addEventListener('keydown',e=>{if(e.key=='Escape'&&G&&G.aspec)G.aspec=null},true);
+// click another player in the lobby to see their profile
+{const o=clickPlayer;clickPlayer=function(e){try{if(G&&G.hub&&G.cx!=null){const[mx,my]=mpos(e),wx=mx+G.cx,wy=my+G.cy;for(const u in HUBO){const q=HUBO[u];if(q&&Date.now()-(q.t||0)<8000&&Math.abs(wx-q.x)<10&&wy>q.y-24&&wy<q.y+5){hubProfile(u,q);return}}}}catch(err){}return o.apply(this,arguments)}}
+function hubProfile(u,q){const nm=String(q.n||'PLAYER');SP.innerHTML=`<h2>${esc(nm)}</h2><div class=row style="align-items:center;gap:12px"><div style="width:30px;height:50px;background:${esc(q.c||'#3a7ae8')};border:2px solid #000"></div><div class=small>IN THE LOBBY${q.bd?'<br>'+esc(String(q.bd)):''}</div></div><div class=row style="margin-top:12px"><button id=scl>CLOSE</button></div>`;
+ const c=document.getElementById('scl');c.onclick=closeStats;const h=profBtns(u);if(h){const row=document.createElement('div');row.className='row';row.style.marginTop='8px';row.innerHTML=h;c.parentNode.parentNode.insertBefore(row,c.parentNode);profWire(row,u,nm)}SV.style.display='flex'}
+// ---------- ADMIN: the player list works even when the database won't hand over every account at once ----------
+{const o=openAdmin;openAdmin=async function(){const D=soDB();if(D&&isAdm()){try{let all=null;try{all=await D.get('users')}catch(e){all=null}if(!all||!Object.keys(all).length){const N=await D.get('names').catch(()=>null)||{},ids=[...new Set(Object.values(N).filter(x=>typeof x=='string'))].slice(0,400),U={};await Promise.all(ids.map(async u=>{try{const pub=await D.get('users/'+u+'/pub'),ban=await D.get('users/'+u+'/ban').catch(()=>null),name=await D.get('users/'+u+'/name').catch(()=>null);if(pub)U[u]={pub,ban,name:name||pub.name}}catch(e){}}));const og=D.get;D.get=function(p){if(p==='users')return Promise.resolve(U);return og.apply(this,arguments)};try{return await o.apply(this,arguments)}finally{D.get=og}}}catch(e){}}return o.apply(this,arguments)}}
+</script>
+<script>
+// ---------- ONLINE: the host sends its room layout so every client sees the exact same room ----------
+const LAYK=['wl','fl','sol','cl','cbig','clY','xs','W','pk','vents','lights','eyes','goo','pzn','th','sn','doorX','parts'];
+const layKey=()=>(G.bk?'b':'')+G.R.n+':'+(G.sub|0);
+setInterval(()=>{try{if(!NET||!NET.game||!NET.host||!G||!G.R||st!='play'||!DB)return;const R=G.R,o={};LAYK.forEach(k=>{if(R[k]!==undefined)o[k]=R[k]});const j=JSON.stringify(o),key=layKey();if(j===NET._layJ&&key===NET._layK)return;NET._layJ=j;NET._layK=key;DB.set(`rooms/${NET.sid}/lay`,{k:key,j}).catch(()=>{})}catch(e){}},600);
+setInterval(()=>{try{if(!NET||!NET.game||NET.host||!DB){return}if(NET._laySid!==NET.sid){NET._laySid=NET.sid;NET.unsub.push(DB.on(`rooms/${NET.sid}/lay`,v=>{NET.lay=v}))}}catch(e){}},500);
+{const o=cUpd;cUpd=function(dt){try{const L=NET&&NET.lay,R=G&&G.R;if(L&&R&&L.k===layKey()&&R._lay!==L.j){const v=JSON.parse(L.j);for(const k in v)R[k]=v[k];R.pg=null;R._lay=L.j;R.clFix=1}}catch(e){}return o.apply(this,arguments)}}
+// ---------- PORTRAIT spawned by an admin: only the person who spawned it sees it ----------
+{const o=admApply;admApply=function(k,a,x,y,uid){const r=o.apply(this,arguments);try{if(k=='portrait'&&G&&G.R&&G.R.por){G.R.por.own=uid;const me=NET&&NET.game?NET.me:uid;if(uid&&me!==uid)G.R.por=null}}catch(e){}return r}}
+</script>
+<script>
+// ---------- clicks: clicking a picture in the journal / achievements / shop no longer throws you back ----------
+{const oc=C.onclick;C.onclick=function(e){try{
+ if(st=='play'&&G&&G.shb){const B=G.shb,[x,y]=mpos(e),pw=200,ph=150,x0=(W-pw)/2,y0=(H-ph)/2-4;if(x<x0||x>x0+pw||y<y0||y>y0+ph){shbClose();return}
+  for(let rI=0;rI<3;rI++){const row=B.top+rI,sy=y0+22+rI*36;for(let q=0;q<4;q++){const i=row*4+q,ix=x0+20+q*44;if(B.L[i]&&x>=ix-6&&x<=ix+26&&y>=sy-4&&y<=sy+38){if(B.sel===i)shbBuy();else{B.sel=i;B.msg='';bp(600,.04,'square',.03)}return}}}return}
+ if(st=='title'&&M.sub>=2){const y=mpos(e)[1];if(y<165)return}}catch(err){}return oc.apply(this,arguments)}}
+</script>
+<script>
+// ---------- in-game chat button (servers + lobby): private chat is always one click away ----------
+(function(){const b=document.createElement('button');b.id='chatB';b.textContent='💬';b.title='PRIVATE CHAT';b.style.cssText='position:fixed;right:42px;bottom:6px;z-index:99999;min-width:30px;height:30px;border:2px solid #8ccaff;background:#1a0e06e6;color:#8ccaff;font:700 13px monospace;cursor:pointer;display:none;border-radius:4px;padding:0 5px';
+ b.onclick=e=>{e.stopPropagation();try{openChat()}catch(err){}};document.body.appendChild(b);
+ setInterval(()=>{try{const show=st=='play'&&G&&(G.hub||NET&&NET.sid)&&!!SO.me;b.style.display=show?'block':'none';const n=Object.keys(SO.unread||{}).length;b.textContent=n?'💬 '+n:'💬';b.style.borderColor=n?'#ff6a3a':'#8ccaff'}catch(err){}},500)})();
 </script>
